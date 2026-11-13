@@ -1,0 +1,81 @@
+What:		/sys/bus/wmi/devices/0B30FD67-1B62-4FCA-B10B-50DC7ADE6A39-*/protocol_version
+Date:		November 2026
+KernelVersion:	7.2
+Contact:	linux-acpi@vger.kernel.org
+Description:
+		(RO) Firmware EWMI protocol version reported by GVER (0x01/0x01)
+		as "<major1>.<major2>.<minor1>.<minor2>" (expected "1.0.1.0" on
+		MECHREVO WUJIE Series-Lark4-LNL BIOS EM_LNL326_V1.0.19).
+
+What:		/sys/bus/wmi/devices/0B30FD67-1B62-4FCA-B10B-50DC7ADE6A39-*/performance_mode
+Date:		November 2026
+KernelVersion:	7.2
+Contact:	linux-acpi@vger.kernel.org
+Description:
+		(RO) Raw firmware performance mode integer reported by GPFM
+		(0x03/0x09): 1 (balanced) or 2 (performance). Note: runtime
+		selection uses the standard platform_profile class interface
+		when allow_writes=1; this raw attribute may move to debugfs
+		before upstream submission.
+
+What:		/sys/bus/wmi/devices/0B30FD67-1B62-4FCA-B10B-50DC7ADE6A39-*/fn_lock
+What:		/sys/bus/wmi/devices/0B30FD67-1B62-4FCA-B10B-50DC7ADE6A39-*/win_lock
+Date:		November 2026
+KernelVersion:	7.2
+Contact:	linux-acpi@vger.kernel.org
+Description:
+		(RO/RW) Current Fn-lock or Windows-key-lock state ("0" or "1")
+		queried via GFLS (0x03/0x03) / GWLS (0x03/0x01). Default mode is
+		0444; becomes 0644 when loaded with allow_lock_writes=1, writing
+		via SFLS (0x03/0x04) / SWLS (0x03/0x02) followed by settling
+		delay and readback verification.
+
+What:		/sys/bus/wmi/devices/0B30FD67-1B62-4FCA-B10B-50DC7ADE6A39-*/touchpad_enabled
+Date:		November 2026
+KernelVersion:	7.2
+Contact:	linux-acpi@vger.kernel.org
+Description:
+		(RO) Firmware touchpad enable state ("0" or "1") queried via
+		GTPS (0x03/0x07).
+
+What:		/sys/bus/wmi/devices/0B30FD67-1B62-4FCA-B10B-50DC7ADE6A39-*/copilot_mode_raw
+What:		/sys/bus/wmi/devices/0B30FD67-1B62-4FCA-B10B-50DC7ADE6A39-*/keyboard_backlight_raw
+What:		/sys/bus/wmi/devices/0B30FD67-1B62-4FCA-B10B-50DC7ADE6A39-*/battery_mode_raw
+What:		/sys/bus/wmi/devices/0B30FD67-1B62-4FCA-B10B-50DC7ADE6A39-*/battery_ec_raw
+Date:		November 2026
+KernelVersion:	7.2
+Contact:	linux-acpi@vger.kernel.org
+Description:
+		(RO, 0400) Raw diagnostic attributes for unmapped or
+		unverified firmware state. Intentionally restricted to root
+		read-only; candidates for relocation to debugfs prior to
+		upstream drivers/platform/x86 inclusion:
+		- copilot_mode_raw: raw EC mailbox byte (0 or 4) from GCLS (0x03/0x05).
+		- keyboard_backlight_raw: two space-separated hex bytes from
+		  GKBT (0x03/0x0B) ("<mailbox_reg> <mailbox_ext_reg>").
+		- battery_mode_raw: raw byte (0, 1, or 2) from GBMM (0x03/0x0D).
+		- battery_ec_raw: two sequential non-atomic 15-byte hex dumps
+		  ("first=<30hex> second=<30hex>") of board-specific H_EC
+		  registers 0x84..0x89, 0x8C..0x93, 0xA8.
+
+What:		/sys/bus/wmi/devices/0B30FD67-1B62-4FCA-B10B-50DC7ADE6DDD-*/event_state
+What:		/sys/bus/wmi/devices/0B30FD67-1B62-4FCA-B10B-50DC7ADE6DDD-*/event_log
+Date:		November 2026
+KernelVersion:	7.2
+Contact:	linux-acpi@vger.kernel.org
+Description:
+		(RO, 0400) Diagnostic WMI notification counters and ring buffer
+		for _WED(0xD0) events ("count=<n> last=0x<code8>" and up to 32
+		lines of "<seq> <boottime_ns> 0x<code8>"). Intended for hotkey
+		validation and candidate for debugfs before upstream submission.
+
+What:		/sys/bus/wmi/devices/C75665A3-4382-4646-ADC8-C81AE146E455-*/auto_power_on
+Date:		November 2026
+KernelVersion:	7.2
+Contact:	linux-acpi@vger.kernel.org
+Description:
+		(RO/RW) AC power-on recovery setting ("0" or "1"), backed by
+		board EC register 0xF5 (0x00=off, 0xa0=on). Default mode is
+		0444; becomes 0644 when loaded with allow_autopower_writes=1,
+		writing through standard WMI method WMCC followed by settling
+		delay and EC readback verification.

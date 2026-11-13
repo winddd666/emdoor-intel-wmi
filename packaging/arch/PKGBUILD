@@ -1,0 +1,56 @@
+# Maintainer: winddd666
+
+pkgname=emdoor-wmi-dkms
+_pkgbase=emdoor-wmi
+pkgver=0.4.4
+pkgrel=1
+pkgdesc='Emdoor Intel EWMI platform driver (DKMS) and read-only/control CLI for MECHREVO Lark4-LNL'
+arch=('any')
+url='https://github.com/winddd666/emdoor-intel-wmi'
+license=('GPL-2.0-or-later')
+depends=('dkms' 'python')
+backup=('etc/modprobe.d/emdoor-wmi.conf')
+_repo_root="$(cd "${startdir}/../.." && pwd -P)"
+source=(
+  "emdoor-wmi.c::file://${_repo_root}/driver/emdoor-wmi.c"
+  "Makefile::file://${_repo_root}/driver/Makefile"
+  "dkms.conf::file://${_repo_root}/driver/dkms.conf"
+  "Kconfig::file://${_repo_root}/driver/Kconfig"
+  "README.md::file://${_repo_root}/driver/README.md"
+  "ABI.md::file://${_repo_root}/driver/ABI.md"
+  "COPYING::file://${_repo_root}/driver/COPYING"
+  "emdoorctl.py::file://${_repo_root}/emdoorctl.py"
+  'emdoor-wmi.conf'
+  "LICENSE.COPYING::file://${_repo_root}/COPYING"
+)
+sha256sums=(
+  '2cbe877e49daf1f4c73c2909d636bceea46a7e8b899af9ea7c65f1f977eb74d8'
+  '293e173c79e5fc598d631da0d0ea875abd239a8e64799406fa006da668b14097'
+  'a69786658877e6e9acec51e36eafb39b77cd397b23a32a9c85f5d4f4b6b4e70a'
+  'c40cfc4762110563aca9767e96cde0bed2ff63d7b1c2b13377b0798480455908'
+  '12b23a3033a4b955f3a36466809a96c37b8ae89fe2c2b906b7e32d02d31c7574'
+  'd34bad3f5d1afb22f2df85def8d1e6c6d850d245c2056ee3cec0fa4cec2494db'
+  'a5c87579eae94763551028fce310636daf1223647439325f853c7a0123dfb553'
+  'cfff78d419e7c374c8d43b8ec1c64fe01238ce1f7e03f520387582c0b86196d6'
+  '52b7fdeca934677e64ec1e1b7d9d66a014e18b8d800a88bb3cd981da9cc6f0e8'
+  'a5c87579eae94763551028fce310636daf1223647439325f853c7a0123dfb553'
+)
+
+package() {
+  local dkms_dest="${pkgdir}/usr/src/${_pkgbase}-${pkgver}"
+
+  install -d "${dkms_dest}"
+  install -m644 \
+    "${srcdir}/emdoor-wmi.c" \
+    "${srcdir}/Makefile" \
+    "${srcdir}/dkms.conf" \
+    "${srcdir}/Kconfig" \
+    "${srcdir}/README.md" \
+    "${srcdir}/ABI.md" \
+    "${srcdir}/COPYING" \
+    "${dkms_dest}/"
+
+  install -Dm755 "${srcdir}/emdoorctl.py" "${pkgdir}/usr/bin/emdoorctl"
+  install -Dm644 "${srcdir}/emdoor-wmi.conf" "${pkgdir}/etc/modprobe.d/emdoor-wmi.conf"
+  install -Dm644 "${srcdir}/LICENSE.COPYING" "${pkgdir}/usr/share/licenses/${pkgname}/COPYING"
+}

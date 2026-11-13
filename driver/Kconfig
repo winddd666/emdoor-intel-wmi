@@ -1,0 +1,20 @@
+# Intended integration point: drivers/platform/x86/Kconfig
+config EMDOOR_INTEL_WMI
+	tristate "Emdoor Intel EWMI laptop support"
+	depends on ACPI_WMI
+	depends on DMI
+	depends on HWMON
+	depends on INPUT
+	select INPUT_SPARSEKMAP
+	select ACPI_PLATFORM_PROFILE
+	help
+	  Read fan speeds, EC temperatures, battery/backlight raw state and
+	  firmware switches on supported Emdoor Intel EWMI laptops, and handle
+	  OEM hotkey notifications and AC auto-power-on control.
+
+	  Performance profiles, Fn/Win lock writes and AC auto-power-on writes
+	  have independent opt-in module parameters (allow_writes,
+	  allow_lock_writes, allow_autopower_writes), all disabled by default.
+
+	  Currently limited to the MECHREVO Lark4 Lunar Lake board and its
+	  EM_LNL326_V1.0.19 BIOS. If built as a module, it is emdoor-wmi.

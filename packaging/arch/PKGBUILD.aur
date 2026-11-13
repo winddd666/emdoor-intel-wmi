@@ -1,0 +1,44 @@
+# Maintainer: winddd666
+
+pkgname=emdoor-wmi-dkms
+_pkgbase=emdoor-wmi
+pkgver=0.4.4
+pkgrel=1
+pkgdesc='Emdoor Intel EWMI platform driver (DKMS) and read-only/control CLI for MECHREVO Lark4-LNL'
+arch=('any')
+url='https://github.com/winddd666/emdoor-intel-wmi'
+license=('GPL-2.0-or-later')
+depends=('dkms' 'python')
+backup=('etc/modprobe.d/emdoor-wmi.conf')
+source=(
+  "${_pkgbase}-${pkgver}.tar.gz::${url}/releases/download/v${pkgver}/${_pkgbase}-${pkgver}.tar.gz"
+  "emdoorctl.py::${url}/releases/download/v${pkgver}/emdoorctl.py"
+  "emdoor-wmi.conf::${url}/raw/v${pkgver}/packaging/arch/emdoor-wmi.conf"
+  "COPYING::${url}/raw/v${pkgver}/COPYING"
+)
+sha256sums=(
+  '1c0252808c0dad97f7c0783c6f2a675b5b131f11c36e8385f3d83531c6208e98'
+  'cfff78d419e7c374c8d43b8ec1c64fe01238ce1f7e03f520387582c0b86196d6'
+  '52b7fdeca934677e64ec1e1b7d9d66a014e18b8d800a88bb3cd981da9cc6f0e8'
+  'a5c87579eae94763551028fce310636daf1223647439325f853c7a0123dfb553'
+)
+
+package() {
+  local src_dir="${srcdir}/${_pkgbase}-${pkgver}"
+  local dkms_dest="${pkgdir}/usr/src/${_pkgbase}-${pkgver}"
+
+  install -d "${dkms_dest}"
+  install -m644 \
+    "${src_dir}/emdoor-wmi.c" \
+    "${src_dir}/Makefile" \
+    "${src_dir}/dkms.conf" \
+    "${src_dir}/Kconfig" \
+    "${src_dir}/README.md" \
+    "${src_dir}/ABI.md" \
+    "${src_dir}/COPYING" \
+    "${dkms_dest}/"
+
+  install -Dm755 "${srcdir}/emdoorctl.py" "${pkgdir}/usr/bin/emdoorctl"
+  install -Dm644 "${srcdir}/emdoor-wmi.conf" "${pkgdir}/etc/modprobe.d/emdoor-wmi.conf"
+  install -Dm644 "${srcdir}/COPYING" "${pkgdir}/usr/share/licenses/${pkgname}/COPYING"
+}
